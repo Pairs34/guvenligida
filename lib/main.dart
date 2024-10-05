@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Taklit veya Tağşiş Yapılan Gıdalar'),
+          title: Text('Arama ve Liste Uygulaması'),
         ),
         body: MyHomePage(),
       ),
@@ -316,6 +316,11 @@ draw=1&columns%5B0%5D%5Bdata%5D=DuyuruTarihi&columns%5B0%5D%5Bname%5D=&columns%5
         Expanded(
           child: SfDataGrid(
             source: MyDataGridSource(_filteredGridData),
+            columnWidthMode: ColumnWidthMode.fitByColumnName, // Kolon genişliğini içeriğe göre ayarlar
+            allowSwiping: false,
+            onQueryRowHeight: (RowHeightDetails details) {
+              return details.getIntrinsicRowHeight(details.rowIndex); // Satır yüksekliğini içeriğe göre ayarlar
+            },
             columns: [
               GridColumn(
                 columnName: 'DuyuruTarihi',
@@ -330,7 +335,8 @@ draw=1&columns%5B0%5D%5Bdata%5D=DuyuruTarihi&columns%5B0%5D%5Bname%5D=&columns%5
                 label: Container(
                   padding: EdgeInsets.all(8.0),
                   alignment: Alignment.center,
-                  child: Text('Firma Adı'),
+                  child: Text('Firma Adı', softWrap: true, // Metni sar
+                    overflow: TextOverflow.visible,),
                 ),
               ),
               GridColumn(
@@ -353,8 +359,12 @@ draw=1&columns%5B0%5D%5Bdata%5D=DuyuruTarihi&columns%5B0%5D%5Bname%5D=&columns%5
                 columnName: 'Uygunsuzluk',
                 label: Container(
                   padding: EdgeInsets.all(8.0),
-                  alignment: Alignment.center,
-                  child: Text('Uygunsuzluk'),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Uygunsuzluk',
+                    softWrap: true, // Metni sar
+                    overflow: TextOverflow.visible, // Taşmayı engelle
+                  ),
                 ),
               ),
             ],
@@ -407,9 +417,14 @@ class MyDataGridSource extends DataGridSource {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((cell) {
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft, // Metni sola hizala
           padding: EdgeInsets.all(8.0),
-          child: Text(cell.value.toString()),
+          child: Text(
+            cell.value.toString(),
+            softWrap: true, // Metni sar
+            overflow: TextOverflow.visible, // Taşmayı önle
+            maxLines: null, // Satır sınırı olmadan genişlesin
+          ),
         );
       }).toList(),
     );
